@@ -40,6 +40,13 @@ npm run build
 npm start
 ```
 
+# Swagger
+To access Swagger UI for available endpoints
+```
+http://localhost:3000/api-docs/#/
+```
+Pass token from `/auth/login` when using protected endpoints (for example: getting all `/users`) like `Bearer <token>`
+
 # REST endpoints
 - public: `/auth/login`, `/auth/register`, `/auth/activate`
 - protected: `/users`
@@ -69,7 +76,7 @@ mongoimport --db heroes-db --collection users --file users.json --jsonArray
 
 # TODO
 - Implement RBAC functionality
-- Integrate Swagger
+- ~~Integrate Swagger~~
 - Test coverage
 
 # Credits

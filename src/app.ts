@@ -10,6 +10,8 @@ import * as mongoose from 'mongoose';
 import * as expressValidator from 'express-validator';
 import * as bluebird from 'bluebird';
 import * as expressJwt from 'express-jwt';
+import * as swaggerUI from 'swagger-ui-express';
+import * as swaggerDocument from '../swagger.json';
 import AuthController from './controllers/auth.ctrl';
 import UserController from './controllers/user.ctrl';
 
@@ -61,7 +63,7 @@ app.use(expressJwt({
       }
     }
   })
-    .unless({path: [{url: '/', method: 'OPTIONS'}, /\/auth\//g ]})
+    .unless({path: [ /\/api-docs\//g, {url: '/', method: 'OPTIONS'}, /\/auth\//g ]})
 );
 
 app.use(function (err, req, res, next) {
@@ -76,6 +78,12 @@ app.use(function (err, req, res, next) {
 const router: express.Router = express.Router();
 new AuthController(router);
 new UserController(router);
+
+/**
+ * Add swagger endpoints
+ */
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use('/api/v1', router);
 
 app.use(router);
 app.use((req: express.Request, resp: express.Response) => {

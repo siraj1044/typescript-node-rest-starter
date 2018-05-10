@@ -1,0 +1,244 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Typescript Node Rest-API Starter",
+    "description": "Typescript Node Rest-API Starter",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "API for authorization/authenticating users in the system"
+    },
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "name": "Authorization",
+      "description": "API Token",
+      "type": "apiKey",
+      "in": "header"
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register new user in system",
+        "description": "Register new user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "UnAuthorized",
+            "schema": {
+              "$ref": "#/definitions/UnAuthorized"
+            }
+          }
+        }
+      }
+    },
+    "/auth/activate/{ACTIVATION_TOKEN}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Activate user",
+        "parameters": [
+          {
+            "name": "ACTIVATION_TOKEN",
+            "in": "path",
+            "required": true,
+            "description": "ACTIVATION_TOKEN for user",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnAuthorized",
+            "schema": {
+              "$ref": "#/definitions/UnAuthorized"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User Login",
+        "description": "Login user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "required": [
+                "email",
+                "password"
+              ],
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User logged in successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnAuthorized",
+            "schema": {
+              "$ref": "#/definitions/UnAuthorized"
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Get users",
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "required": [
+        "email",
+        "password",
+        "fname",
+        "lname",
+        "role",
+        "username"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string"
+        },
+        "lname": {
+          "type": "string"
+        },
+        "fname": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+    "UnAuthorized": {
+      "properties": {
+        "msg": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "location": {
+                "type": "string"
+              },
+              "param": {
+                "type": "string"
+              },
+              "msg": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
